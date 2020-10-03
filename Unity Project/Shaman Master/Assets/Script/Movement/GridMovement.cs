@@ -19,12 +19,14 @@ public class GridMovement : MonoBehaviour
     private Quaternion targetRot;
     private float currAngle;
 
+    public RandomEncounter encounter;
 
     private void Awake()
     {
         targetRot = transform.rotation;
         currAngle = transform.rotation.z;
     }
+
     void Update()
     {
         if (!isMoving && !isRotating)
@@ -63,6 +65,7 @@ public class GridMovement : MonoBehaviour
             yield return null;
         }
         transform.position = targetPos;
+        encounter.CheckEncounter(transform.position);
         isMoving = false;
     }
 
