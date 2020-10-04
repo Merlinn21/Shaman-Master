@@ -4,32 +4,32 @@ using UnityEngine;
 
 public class Ghost
 {
-    GhostBase _base;
-    int lvl;
+    public GhostBase Base { get; set; }
+    public int Level { get; set; }
 
     public Ghost(GhostBase ghostBase, int level)
     {
-        _base = ghostBase;
-        lvl = level;
+        Base = ghostBase;
+        Level = level;
     }
 
     public int MaxHp()
     {
-        return Mathf.FloorToInt(_base.getMaxHp());
+        return Mathf.FloorToInt(Base.getMaxHp());
     }
 
     public int Attack()
     {
-        return Mathf.FloorToInt(_base.getAtk());
+        return Mathf.FloorToInt(Base.getAtk());
     }
 
     public int Defend()
     {
-        return Mathf.FloorToInt(_base.getDef());
+        return Mathf.FloorToInt(Base.getDef());
     }
 
     public int Speed()
     {
-        return Mathf.FloorToInt(_base.getSpeed());
+        return Mathf.FloorToInt(Base.getSpeed());
     }
 }

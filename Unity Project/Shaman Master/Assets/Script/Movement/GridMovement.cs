@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class GridMovement : MonoBehaviour
 {
@@ -19,7 +20,10 @@ public class GridMovement : MonoBehaviour
     private Quaternion targetRot;
     private float currAngle;
 
-    public RandomEncounter encounter;
+    public LayerMask encounterLayer;
+    public float chance;
+
+    public event Action onEncounter; // observer pattern
 
     private void Awake()
     {
@@ -27,7 +31,7 @@ public class GridMovement : MonoBehaviour
         currAngle = transform.rotation.z;
     }
 
-    void Update()
+    public void HandleUpdate()
     {
         if (!isMoving && !isRotating)
         {
@@ -65,7 +69,7 @@ public class GridMovement : MonoBehaviour
             yield return null;
         }
         transform.position = targetPos;
-        encounter.CheckEncounter(transform.position);
+        CheckEncounter(transform.position);
         isMoving = false;
     }
 
@@ -106,6 +110,17 @@ public class GridMovement : MonoBehaviour
         else
         {
             back = true;
+        }
+    }
+
+    public void CheckEncounter(Vector3 pos)
+    {
+        if (Physics2D.OverlapCircle(pos, 0.2f, encounterLayer) != null)
+        {
+            if (UnityEngine.Random.Range(1, 101) <= chance)
+            {
+                onEncounter();
+            }
         }
     }
 }
