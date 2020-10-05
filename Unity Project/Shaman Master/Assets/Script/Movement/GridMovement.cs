@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.Tilemaps;
 
 public class GridMovement : MonoBehaviour
 {
@@ -11,12 +12,12 @@ public class GridMovement : MonoBehaviour
     private bool back = true;
 
     private Vector3 currPos;
-    public Transform nextPos;
-    public Transform prevPos;
-    public float timeToMove;
-    public float gridMoveSize;
+    [SerializeField] private Transform nextPos;
+    [SerializeField] private Transform prevPos;
+    [SerializeField] private float timeToMove;
+    [SerializeField] private float gridMoveSize;
 
-    public float timeToRotate;
+    [SerializeField] private float timeToRotate;
     private Quaternion targetRot;
     private float currAngle;
 
@@ -24,6 +25,10 @@ public class GridMovement : MonoBehaviour
     public float chance;
 
     public event Action onEncounter; // observer pattern
+
+    public LayerMask eventLayer;
+    public event Action<Dialogue> onDialogue;
+    int index = 0;
 
     private void Awake()
     {
@@ -69,6 +74,7 @@ public class GridMovement : MonoBehaviour
             yield return null;
         }
         transform.position = targetPos;
+        CheckEvent();
         CheckEncounter(transform.position);
         isMoving = false;
     }
@@ -121,6 +127,18 @@ public class GridMovement : MonoBehaviour
             {
                 onEncounter();
             }
+        }
+    }
+
+    private void CheckEvent()
+    { 
+        if (Physics2D.OverlapCircle(transform.position, 0.1f, eventLayer) != null)
+        {
+            Collider2D[] collider = new Collider2D[20];
+            Physics2D.OverlapCircleNonAlloc(transform.position, 0.1f, collider, eventLayer);
+            Debug.Log(collider[0].name);
+            collider[0].GetComponent<DialogueEvent>().Deactivate();
+            onDialogue(collider[0].GetComponent<DialogueEvent>().dialogue);
         }
     }
 }

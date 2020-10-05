@@ -22,7 +22,7 @@ public class BattleSystem : MonoBehaviour
         battleHuds[2].SetData(enemies[2].Ghost);
     }
 
-    private void Start()
+    public void StartBattle()
     {
         SetupBattle();
     }
