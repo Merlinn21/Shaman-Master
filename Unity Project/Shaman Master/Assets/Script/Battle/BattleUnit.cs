@@ -10,10 +10,16 @@ public class BattleUnit : MonoBehaviour
 
     public Ghost Ghost { get; set; } //properties
 
-    public void Setup()
+    public void Setup(GhostBase ghost)
     {
-        Ghost = new Ghost(ghostBase, level);
+        Ghost = new Ghost(ghost, level);
 
-        GetComponent<Image>().sprite = Ghost.Base.getSprite();
+        if(Ghost != null)
+        {
+            GetComponent<Image>().sprite = Ghost.Base.getSprite();
+            this.gameObject.SetActive(true);
+
+        }
+        
     }
 }

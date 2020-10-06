@@ -23,4 +23,5 @@ MonoBehaviour:
     text: bruh
   - character: {fileID: 11400000, guid: ff8b56cc87a6e9b4b8c9be98ee833694, type: 2}
     text: ...
+  ghostParty: {fileID: 11400000, guid: a761f0af3d4d0034592b638e7d779521, type: 2}
   freeRoam: 0

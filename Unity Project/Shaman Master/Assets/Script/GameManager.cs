@@ -26,15 +26,15 @@ public class GameManager : MonoBehaviour
         dialogueTrigger.onDialogueOver += EndDialogue;
     }
 
-    public void StartBattle()
+    public void StartBattle(bool randomBattle)
     {
         state = GameState.Battle;
         battleSystem.gameObject.SetActive(true);
         mainCamera.gameObject.SetActive(false);
 
-        battleSystem.StartBattle();
+        battleSystem.StartBattle(randomBattle);
     }
-    
+ 
     public void EndBattle(bool win)
     {
         state = GameState.FreeRoam;
@@ -49,20 +49,23 @@ public class GameManager : MonoBehaviour
         dialogueTrigger.StartDialogue();
     }
 
-    public void EndDialogue(bool freeRoam)
+    public void EndDialogue(bool freeRoam, GhostParty ghostParty) 
     {
         if (freeRoam)
         {
             state = GameState.FreeRoam;
-
+            playerMove.onEventFalse();
         }
         else
         {
             state = GameState.Battle;
-            StartBattle();
+            battleSystem.gameObject.SetActive(true);
+            mainCamera.gameObject.SetActive(false);
+            playerMove.onEventFalse();
+            battleSystem.StartEventBattle(ghostParty);
         }
-        
     }
+
 
     private void Update()
     {

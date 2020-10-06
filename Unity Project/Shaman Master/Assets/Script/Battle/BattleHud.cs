@@ -9,6 +9,10 @@ public class BattleHud : MonoBehaviour
 
     public void SetData(Ghost ghost)
     {
-        ghostName.text = ghost.Base.getName();     
+        if(ghost != null)
+        {
+            ghostName.text = ghost.Base.getName();
+            
+        }
     }
 }

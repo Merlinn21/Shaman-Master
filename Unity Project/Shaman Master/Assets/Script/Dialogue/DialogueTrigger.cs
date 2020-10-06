@@ -5,8 +5,8 @@ using System;
 
 public class DialogueTrigger : MonoBehaviour
 {
-    [SerializeField] private Dialogue dialogue;
-
+    private Dialogue dialogue;
+    private GhostParty eventParty;
     [SerializeField] private GameObject speakerLeft;
     [SerializeField] private GameObject speakerRight;
 
@@ -14,12 +14,15 @@ public class DialogueTrigger : MonoBehaviour
     private DialogueUI UIright;
 
     private int activeLineIndex = 0;
-    public event Action<bool> onDialogueOver;
+    public event Action<bool, GhostParty> onDialogueOver;
+
 
     public void SetDialogue(Dialogue _dialogue)
     {
         dialogue = _dialogue;
+        
     }
+
 
     public void StartDialogue()
     {
@@ -41,9 +44,8 @@ public class DialogueTrigger : MonoBehaviour
     public void NextLine()
     {
         if (activeLineIndex < dialogue.lines.Length)
-        {
+        { 
             DisplayLine();
-            activeLineIndex++;
         }
         else if(dialogue.getFreeRoam())
         {
@@ -52,7 +54,7 @@ public class DialogueTrigger : MonoBehaviour
 
             activeLineIndex = 0;
 
-            onDialogueOver(true);
+            onDialogueOver(true, null);
         }
         else if (!dialogue.getFreeRoam())
         {
@@ -60,7 +62,8 @@ public class DialogueTrigger : MonoBehaviour
             UIright.HideUI();
 
             activeLineIndex = 0;
-            onDialogueOver(false);
+            eventParty = dialogue.ghostParty;
+            onDialogueOver(false, eventParty);
         }
     }
 
@@ -77,6 +80,7 @@ public class DialogueTrigger : MonoBehaviour
         {
             SetDialogue(UIright, UIleft, line.text);
         }
+        activeLineIndex++;
     }
 
     private void SetDialogue(DialogueUI show, DialogueUI hide, string text)

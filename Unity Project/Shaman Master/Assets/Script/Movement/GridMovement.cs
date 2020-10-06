@@ -24,11 +24,13 @@ public class GridMovement : MonoBehaviour
     public LayerMask encounterLayer;
     public float chance;
 
-    public event Action onEncounter; // observer pattern
+    public event Action<bool> onEncounter; // observer pattern
 
     public LayerMask eventLayer;
     public event Action<Dialogue> onDialogue;
-    int index = 0;
+    public event Action<GhostParty> onDialogueBattle;
+
+    private bool onEvent;
 
     private void Awake()
     {
@@ -75,7 +77,8 @@ public class GridMovement : MonoBehaviour
         }
         transform.position = targetPos;
         CheckEvent();
-        CheckEncounter(transform.position);
+        if(!onEvent)
+            CheckEncounter(transform.position);
         isMoving = false;
     }
 
@@ -125,7 +128,7 @@ public class GridMovement : MonoBehaviour
         {
             if (UnityEngine.Random.Range(1, 101) <= chance)
             {
-                onEncounter();
+                onEncounter(true);
             }
         }
     }
@@ -136,9 +139,16 @@ public class GridMovement : MonoBehaviour
         {
             Collider2D[] collider = new Collider2D[20];
             Physics2D.OverlapCircleNonAlloc(transform.position, 0.1f, collider, eventLayer);
-            Debug.Log(collider[0].name);
-            collider[0].GetComponent<DialogueEvent>().Deactivate();
-            onDialogue(collider[0].GetComponent<DialogueEvent>().dialogue);
+
+            DialogueEvent dialogueEvent = collider [0].GetComponent<DialogueEvent>();
+            dialogueEvent.Deactivate();
+            onDialogue(dialogueEvent.dialogue);
+            onEvent = true;
         }
+    }
+
+    public void onEventFalse()
+    {
+        onEvent = false;
     }
 }

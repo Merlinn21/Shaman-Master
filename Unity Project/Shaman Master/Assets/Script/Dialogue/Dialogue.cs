@@ -18,6 +18,7 @@ public class Dialogue : ScriptableObject
     [SerializeField] private Character charLeft;
     [SerializeField] private Character charRight;
     public Line[] lines;
+    public GhostParty ghostParty;
     [SerializeField] private bool freeRoam;
 
     public Character getCharLeft() { return charLeft; }
